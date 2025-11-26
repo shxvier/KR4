@@ -1,0 +1,375 @@
+/* src/App.css */
+
+:root {
+  --bg-gradient: radial-gradient(circle at top left, #fce7f3 0%, #eff6ff 35%, #fdf2f8 70%, #e0f2fe 100%);
+  --board-bg: rgba(255, 255, 255, 0.9);
+  --board-border: rgba(255, 255, 255, 0.7);
+  --column-bg: rgba(255, 255, 255, 0.85);
+  --task-bg: #ffffff;
+  --task-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+  --radius-xl: 24px;
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --accent-text: #111827;
+  --muted-text: #6b7280;
+  --border-soft: rgba(148, 163, 184, 0.25);
+  --transition-fast: 150ms ease-out;
+  --transition-med: 200ms ease-out;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg-gradient);
+  color: var(--accent-text);
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Обёртка центровки */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Карточка доски (glassmorphism-эффект) */
+.board {
+  width: 100%;
+  max-width: 1120px;
+  padding: 22px 24px 26px;
+  background: var(--board-bg);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--board-border);
+  box-shadow:
+    0 24px 80px rgba(15, 23, 42, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px) saturate(130%);
+}
+
+/* Верхняя панель */
+.board__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.board__title {
+  margin: 0 0 4px;
+  font-size: 26px;
+  letter-spacing: 0.03em;
+}
+
+.board__subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted-text);
+}
+
+/* Метаданные справа */
+.board__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.board__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  background: rgba(79, 70, 229, 0.06);
+  color: #4f46e5;
+  border: 1px solid rgba(129, 140, 248, 0.35);
+}
+
+.board__chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
+}
+
+.board__date {
+  font-size: 13px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.05);
+  color: #4b5563;
+}
+
+.board__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  color: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.45);
+}
+
+/* Колонки */
+.board__columns {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.board__columns::-webkit-scrollbar {
+  height: 6px;
+}
+
+.board__columns::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.7);
+  border-radius: 999px;
+}
+
+/* Колонка */
+.column {
+  flex: 1;
+  min-width: 260px;
+  background: var(--column-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  max-height: 520px;
+  transition:
+    border-color var(--transition-med),
+    box-shadow var(--transition-med),
+    transform var(--transition-med),
+    background-color var(--transition-med);
+}
+
+.column--active-drop {
+  border-color: rgba(96, 165, 250, 0.8);
+  box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.8),
+    0 16px 40px rgba(37, 99, 235, 0.25);
+  background-color: rgba(239, 246, 255, 0.95);
+  transform: translateY(-2px);
+}
+
+/* Шапка колонки */
+.column__header {
+  padding: 10px 14px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(8px);
+}
+
+.column__title {
+  margin: 0;
+  font-size: 15px;
+}
+
+.column__count {
+  min-width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+/* Тело колонки */
+.column__body {
+  padding: 10px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.column__body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.column__body::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.7);
+  border-radius: 999px;
+}
+
+/* Форма добавления задачи */
+.column__form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.column__input {
+  flex: 1;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  padding: 6px 10px;
+  font-size: 13px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.9);
+  transition: border-color 140ms ease-out, box-shadow 140ms ease-out,
+    background-color 140ms ease-out;
+}
+
+.column__input::placeholder {
+  color: #9ca3af;
+}
+
+.column__input:focus {
+  border-color: rgba(99, 102, 241, 0.8);
+  box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.6);
+  background-color: #ffffff;
+}
+
+.column__button {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  color: #ffffff;
+  font-size: 18px;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.5);
+  transition: transform 120ms ease-out, box-shadow 120ms ease-out,
+    filter 120ms ease-out;
+}
+
+.column__button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(79, 70, 229, 0.6);
+  filter: brightness(1.03);
+}
+
+.column__button:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 14px rgba(79, 70, 229, 0.45);
+}
+
+/* Пустая колонка */
+.column__empty {
+  font-size: 13px;
+  color: var(--muted-text);
+  border-radius: var(--radius-md);
+  border: 1px dashed rgba(148, 163, 184, 0.7);
+  padding: 10px 12px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+/* Задачи */
+.task {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  background: var(--task-bg);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  box-shadow: var(--task-shadow);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  cursor: grab;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.task:active {
+  cursor: grabbing;
+}
+
+.task:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.22);
+  border-color: rgba(99, 102, 241, 0.45);
+  background: #fdfbff;
+}
+
+.task__title {
+  font-size: 14px;
+  flex: 1;
+}
+
+/* Кнопка удаления */
+.task__delete {
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0 2px;
+  cursor: pointer;
+  border-radius: 999px;
+  transition: color 120ms ease-out, background-color 120ms ease-out,
+    transform 120ms ease-out;
+}
+
+.task__delete:hover {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.08);
+  transform: translateY(-1px);
+}
+
+.task__delete:active {
+  transform: translateY(0);
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+  .app-shell {
+    align-items: stretch;
+    padding: 14px;
+  }
+
+  .board {
+    padding: 18px 14px 20px;
+  }
+
+  .board__top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .board__title {
+    font-size: 22px;
+  }
+
+  .board__columns {
+    gap: 12px;
+  }
+
+  .column {
+    min-width: 220px;
+  }
+}
